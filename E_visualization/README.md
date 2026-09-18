@@ -7,6 +7,12 @@ it in any browser directly, `file://` works fine — no server, no
 `npm install`, no build step). Real Estonia 2019 hourly data (Elering
 archive) is embedded directly in the file.
 
+Self-contained, zero dependencies. **Download `index.html` and open it
+directly in any browser** — no server, no `npm install`, and no build 
+step required.
+The dashboard includes real Estonia 2019 hourly electricity data from 
+the Elering archive, embedded directly in the file.
+
 Also works via GitHub Pages if you want to host it: enable Pages on
 this repo, point it at this folder, and this file becomes the site's
 homepage automatically.
