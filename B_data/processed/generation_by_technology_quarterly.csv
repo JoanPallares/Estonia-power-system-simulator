@@ -1,0 +1,4 @@
+quarter,technology,generation_mwh,installed_capacity_mw,renewable,data_quality,source
+2025-Q3,wind,139000,695.0,True,measured,Elering press release 'Renewable energy covered more than a third of consumption in the third quarter of the year' (elering.ee). Capacity as of start-2025 (may have grown slightly by Q3).
+2025-Q3,solar,261000,700.0,True,measured,"Elering, same source. Capacity: 'over 700 MW' as stated in that specific release (slightly more granular than the 1210 MW total-system figure used in country config, which is a later/different snapshot)."
+2025-Q3,biomass_biogas_waste,219000,,True,measured,"Elering, same source. Installed capacity by this sub-technology not published separately; left blank rather than guessed."
