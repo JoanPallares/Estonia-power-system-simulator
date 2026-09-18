@@ -1,0 +1,91 @@
+# Phase 32: Estonia scenario set (S0-S15)
+#
+# Every multiplier here is a HYPOTHETICAL sensitivity input, not a
+# forecast or a real-world probability (MASTER PROMPT Section 9 and 15).
+# Values like "high wind = x1.5" are this project's own round-number
+# choices for a clear sensitivity sweep, not derived from any wind
+# forecast model. Labelled as such in each description.
+
+scenarios:
+  - name: S0_current_system
+    description: "Baseline — real 2019 hourly data, no modification."
+    scenario: {}
+
+  - name: S1_high_demand
+    description: "ASSUMPTION: +20% demand, round number for sensitivity, not a forecast."
+    scenario:
+      demand_multiplier: 1.20
+
+  - name: S2_low_demand
+    description: "ASSUMPTION: -20% demand."
+    scenario:
+      demand_multiplier: 0.80
+
+  - name: S3_high_wind
+    description: "ASSUMPTION: +50% wind output shape, round number."
+    scenario:
+      wind_multiplier: 1.50
+
+  - name: S4_low_wind
+    description: "ASSUMPTION: -50% wind output shape."
+    scenario:
+      wind_multiplier: 0.50
+
+  - name: S5_low_solar
+    description: "N/A for 2019 baseline (real 2019 solar ~0) — included for schema completeness, see Phase 19 notes."
+    scenario:
+      solar_multiplier: 0.50
+
+  - name: S6_low_hydro
+    description: "Estonia's real hydro is ~7 MW (Phase 20) — this scenario is illustrative only, negligible system impact expected."
+    scenario:
+      hydro_availability: 0.50
+
+  - name: S7_oil_shale_outage
+    description: "ASSUMPTION: 50% of non-wind dispatchable generation (oil shale + other, bundled — see generation.py) unavailable."
+    scenario:
+      oil_shale_availability: 0.50
+
+  - name: S8_finland_interconnection_outage
+    description: "REAL capacity basis: Finland interconnection (EstLink 1+2, 1000 MW combined) fully unavailable. See run_failure_deterministic.py for the more detailed per-cable version of this."
+    scenario:
+      import_capacity_multiplier: 0.0
+
+  - name: S9_latvia_interconnection_outage
+    description: "Latvia interconnection unavailable. NOTE: this project's import/export figures are NETTED across all 3 real 2019 flow columns (FI/RU/LV combined) — isolating Latvia's specific contribution needs the per-country flow columns directly, done in run_failure_deterministic.py, not this generic sweep."
+    scenario:
+      import_capacity_multiplier: 1.0  # placeholder — see note above; generic engine can't isolate one interconnection from netted imports_mw alone
+
+  - name: S10_import_capacity_minus_50pct
+    description: "ASSUMPTION: overall import capacity headroom cut by half."
+    scenario:
+      import_capacity_multiplier: 0.50
+
+  - name: S11_import_capacity_zero
+    description: "Extreme case: no import capacity at all."
+    scenario:
+      import_capacity_multiplier: 0.0
+
+  - name: S12_high_renewable_penetration
+    description: "ASSUMPTION: wind x3, illustrative of a much higher renewable share (see also Phase 29's dedicated sweep for a cleaner version of this)."
+    scenario:
+      wind_multiplier: 3.0
+
+  - name: S13_high_renewables_plus_storage
+    description: "Same as S12, plus a hypothetical 500 MWh / 200 MW battery (Phase 26) — Estonia has no such real storage today."
+    scenario:
+      wind_multiplier: 3.0
+      storage_capacity_mwh: 500
+
+  - name: S14_cold_winter_low_wind
+    description: "ASSUMPTION: combines a demand increase (proxy for a colder-than-2019 winter, since we don't have a real temperature regression — see Phase 22) with reduced wind."
+    scenario:
+      demand_multiplier: 1.15
+      wind_multiplier: 0.50
+
+  - name: S15_cold_winter_low_wind_interconnection_failure
+    description: "The compound extreme scenario: S14 + Finland interconnection down. This is the one most likely to actually stress the system, given Estonia's large domestic capacity margin found in earlier runs."
+    scenario:
+      demand_multiplier: 1.15
+      wind_multiplier: 0.50
+      import_capacity_multiplier: 0.0

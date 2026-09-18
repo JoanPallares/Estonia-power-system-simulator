@@ -1,0 +1,32 @@
+# C_configs/simulation.yaml
+#
+# Global simulation defaults. Country-specific parameters (capacities,
+# thresholds) stay in C_configs/estonia.yaml — this file holds settings
+# that apply to the SIMULATION MECHANISM itself, regardless of country.
+#
+# Nothing currently reads this file programmatically — the values below
+# are consolidated here for visibility/documentation, since they were
+# previously hard-coded as defaults scattered across run_*.py scripts
+# (monte_carlo.py's MonteCarloConfig, dc_power_flow.py's BASE_MVA, etc).
+# Wiring this file into those defaults is reasonable future work, not
+# done yet — recorded here rather than silently left undocumented.
+
+simulation:
+  default_timestep: 1h        # matches the real hourly Elering data resolution
+  random_seed: 42              # used throughout for reproducibility (Section 24)
+
+monte_carlo:
+  default_iterations: 1000
+  # See A_engine/simulation/monte_carlo.py MonteCarloConfig for the full
+  # set of ASSUMED (not measured) outage-probability parameters — not
+  # duplicated here to avoid two sources of truth silently drifting apart.
+
+power_flow:
+  base_mva: 100.0
+  # Assumed line reactance and thermal limits by voltage class live in
+  # A_engine/power_flow/dc_power_flow.py (TYPICAL_REACTANCE_OHM_PER_KM,
+  # TYPICAL_THERMAL_LIMIT_MW) — generic textbook values, not Estonia-
+  # specific, documented there rather than duplicated here.
+
+reliability:
+  reserve_threshold_pct: 10.0  # only used as compute_reliability_metrics()'s default; Estonia's real Elering Grid Code value (see estonia.yaml) is authoritative

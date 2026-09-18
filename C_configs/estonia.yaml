@@ -1,0 +1,66 @@
+# Country configuration: Estonia
+#
+# Unlike andorra.yaml, most fields here are REAL published values, not
+# placeholders. Estonia is a full ENTSO-E member with an open-data TSO
+# (Elering) and an officially published reserve-margin requirement -
+# see B_data/metadata/data_catalogue.csv for full provenance.
+
+country:
+  name: Estonia
+
+simulation:
+  timestep: annual   # Level 1 currently validated at annual resolution only
+                      # (one clean, fully-sourced year: 2024). Quarterly
+                      # generation-by-technology data exists separately
+                      # (see generation_by_technology_quarterly.csv) but is
+                      # not yet a full quarterly balance series.
+
+generation:
+  wind:
+    capacity_mw: 695       # Elering, start of 2025. REAL.
+    renewable: true
+  solar:
+    capacity_mw: 1210      # Elering, start of 2025. REAL.
+    renewable: true
+  other_dispatchable:
+    capacity_mw: 1568      # DERIVED residual: 3473 - 695 - 1210.
+    renewable: null        # Mixed (oil shale + biomass + hydro + other) - not
+                            # disaggregated in public data at MW level. Do not
+                            # treat as a single technology.
+
+interconnections:
+  - name: Finland
+    import_capacity_mw: 1000    # Estlink 1 (350) + Estlink 2 (650). REAL.
+    export_capacity_mw: 1000    # HVDC links are bidirectional; using same figure.
+    historical_outage_event: >
+      Estlink 2 suffered an unplanned outage from 25 Dec 2024 (suspected
+      sabotage, unconfirmed) until ~Sep 2025, reducing Finland-Estonia
+      capacity to 358 MW. Used as a real case study in run_failure_scenario.py.
+  - name: Latvia
+    import_capacity_mw: null    # Only the +600 MW increment from the 3rd
+    export_capacity_mw: null    # interconnection (2020) is precisely sourced;
+                                 # total combined capacity not yet found as a
+                                 # single confirmed figure. Left null rather
+                                 # than guessed.
+
+reliability:
+  reserve_thresholds:
+    stressed_below_pct: 20.0    # ASSUMPTION (this project's own choice) — a
+                                 # buffer zone above the official minimum, to
+                                 # distinguish "getting close" from "violation".
+    blackout_below_pct: 10.0    # OFFICIAL, not an assumption: Elering's Grid
+                                 # Code requires adequacy margin >= peak demand
+                                 # + 10% (subsection 132(5)). Below this is a
+                                 # real regulatory violation, not just this
+                                 # project's opinion.
+  peak_demand_mw: 1723          # All-time record, 5 Feb 2026, 10:25. REAL.
+  installed_capacity_total_mw: 3473   # Start of 2025. REAL.
+
+data_source_notes: >
+  Estonia is a full ENTSO-E member. TSO: Elering (open data, no API key
+  required for most public endpoints - see https://dashboard.elering.ee).
+  Synchronised with Continental Europe since February 2025 (previously
+  synchronous with the Russian/Belarusian grid). This project currently uses
+  manually-compiled figures from Elering's public web pages and press
+  releases, not yet the live API - see B_data/metadata/data_catalogue.csv
+  for exactly which numbers are measured vs derived.
